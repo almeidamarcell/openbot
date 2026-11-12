@@ -1,14 +1,30 @@
-import { SOUND_THEMES, type SoundChoice, type SoundTheme } from "@openbot/ui/features/settings/app-settings";
-import { bind, type PlayOptions, play, type SoundName, setEnabled, setTheme } from "cuelume";
+import {
+  ACTION_SOUND_KINDS,
+  type ActionSoundKind,
+  SOUND_THEMES,
+  type SoundChoice,
+  type SoundTheme,
+} from "@openbot/ui/features/settings/app-settings";
+import { bind, type PlayOptions, play, type SoundName, setEnabled, setMuted, setTheme } from "cuelume";
 
 const ACTION_SOUNDS_STORAGE_KEY = "openbot:action-sounds-enabled";
 const ACTION_SOUNDS_THEME_STORAGE_KEY = "openbot:action-sounds-theme";
+const ACTION_SOUNDS_KIND_STORAGE_KEY = {
+  clicks: "openbot:action-sounds-clicks",
+  typing: "openbot:action-sounds-typing",
+} as const satisfies Record<ActionSoundKind, string>;
+/** The cues of each kind. The other cues, such as `success` and `error`, follow only the sound menu. */
+const ACTION_SOUNDS_OF_KIND = {
+  clicks: ["tap", "select", "toggle", "open", "close", "navigate"],
+  typing: ["type"],
+} as const satisfies Record<ActionSoundKind, readonly SoundName[]>;
 
 type PreferenceStorage = Pick<Storage, "getItem">;
 
 /** The choices for this page after the browser did not save them. They win over older saved values. */
 let unsavedPreference: boolean | undefined;
 let unsavedTheme: SoundTheme | undefined;
+const unsavedKinds: Partial<Record<ActionSoundKind, boolean>> = {};
 let started = false;
 
 /**
@@ -31,6 +47,20 @@ export function readActionSoundTheme(storage?: PreferenceStorage): SoundTheme {
     return SOUND_THEMES.find((theme) => theme === saved) ?? "default";
   } catch {
     return "default";
+  }
+}
+
+/**
+ * A kind is on until the user turns it off: an update must not stop the sounds of a user who has
+ * the action sounds on. The kind plays only while the action sounds are on.
+ */
+export function isActionSoundKindEnabled(kind: ActionSoundKind, storage?: PreferenceStorage): boolean {
+  const unsaved = unsavedKinds[kind];
+  if (unsaved !== undefined) return unsaved;
+  try {
+    return (storage ?? window.localStorage).getItem(ACTION_SOUNDS_KIND_STORAGE_KEY[kind]) !== "false";
+  } catch {
+    return true;
   }
 }
 
@@ -69,9 +99,23 @@ export function setActionSoundChoice(choice: SoundChoice): void {
   play("success", { theme: choice });
 }
 
+function applySavedKinds(): void {
+  setMuted(ACTION_SOUND_KINDS.flatMap((kind) => (isActionSoundKindEnabled(kind) ? [] : ACTION_SOUNDS_OF_KIND[kind])));
+}
+
+/** Saves the switch of one kind of action sound. The other kinds and the sound menu do not change. */
+export function setActionSoundKindEnabled(kind: ActionSoundKind, enabled: boolean): void {
+  if (savePreference(ACTION_SOUNDS_KIND_STORAGE_KEY[kind], String(enabled))) delete unsavedKinds[kind];
+  else unsavedKinds[kind] = enabled;
+  applySavedKinds();
+  // The click that turns the click sounds on is skipped, because they were off, so its cue plays here.
+  if (kind === "clicks" && enabled && isActionSoundEnabled()) play("toggle");
+}
+
 function applySavedChoice(): void {
   setTheme(readActionSoundTheme());
   setEnabled(isActionSoundEnabled());
+  applySavedKinds();
 }
 
 /**
@@ -82,8 +126,13 @@ export function startActionSounds(): void {
   if (started) return;
   started = true;
   applySavedChoice();
+  const savedKeys: readonly string[] = [
+    ACTION_SOUNDS_STORAGE_KEY,
+    ACTION_SOUNDS_THEME_STORAGE_KEY,
+    ...Object.values(ACTION_SOUNDS_KIND_STORAGE_KEY),
+  ];
   window.addEventListener("storage", (event) => {
-    if (event.key === ACTION_SOUNDS_STORAGE_KEY || event.key === ACTION_SOUNDS_THEME_STORAGE_KEY) applySavedChoice();
+    if (event.key !== null && savedKeys.includes(event.key)) applySavedChoice();
   });
   bind();
 }

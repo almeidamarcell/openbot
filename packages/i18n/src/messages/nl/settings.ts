@@ -201,6 +201,11 @@ export const messages = {
   "settings.soundFeedback.title": "Actiegeluiden",
   "settings.soundFeedback.description":
     "Gebruik korte geluiden om te bevestigen wat je doet, zoals een bericht verzenden.",
+  "settings.soundClicks.title": "Klikgeluiden",
+  "settings.soundClicks.description":
+    "Gebruik een geluid voor klikken op bedieningselementen, zoals knoppen en menu's.",
+  "settings.soundTyping.title": "Typgeluiden",
+  "settings.soundTyping.description": "Gebruik een geluid voor elke toets die je typt.",
   "settings.soundTheme.off": "Uit",
   "settings.soundTheme.classic": "Klassiek",
   "settings.soundTheme.warm": "Warm",

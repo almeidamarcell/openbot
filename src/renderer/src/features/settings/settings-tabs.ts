@@ -111,6 +111,8 @@ export const navItems: ReadonlyArray<SettingsNavItem> = [
       { titleKey: "settings.testNotification.title", descriptionKey: "settings.testNotification.description" },
       { titleKey: "settings.taskSound.title", descriptionKey: "settings.taskSound.description" },
       { titleKey: "settings.soundFeedback.title", descriptionKey: "settings.soundFeedback.description" },
+      { titleKey: "settings.soundClicks.title", descriptionKey: "settings.soundClicks.description" },
+      { titleKey: "settings.soundTyping.title", descriptionKey: "settings.soundTyping.description" },
     ],
   },
   {

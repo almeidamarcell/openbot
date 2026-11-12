@@ -31,7 +31,12 @@ import { SoundChoiceSelect } from "@openbot/ui/features/settings/SoundChoiceSele
 import { createSettingsProfileStore } from "@openbot/ui/features/settings/stores/profile-store";
 import { useText } from "@openbot/ui/text";
 import { createEffect, createSignal, onCleanup } from "solid-js";
-import { readActionSoundChoice, setActionSoundChoice } from "../../action-sounds";
+import {
+  isActionSoundKindEnabled,
+  readActionSoundChoice,
+  setActionSoundChoice,
+  setActionSoundKindEnabled,
+} from "../../action-sounds";
 import { setShowAgentSteps, useShowAgentSteps } from "../../agent-steps-preference";
 import { setCompactMessageActions, useCompactMessageActions } from "../../compact-message-actions-preference";
 import { playSoundChoice, readTaskSound, setTaskSound } from "../../completion-sound";
@@ -103,9 +108,13 @@ export default function WebAccountSettings(props: WebAccountSettingsProps) {
   const webLiveVoice = useWebLiveVoice();
   // Playback reads the stored value on each event, so the menus follow a change from another tab.
   const [soundChoice, setSoundChoice] = createSignal(readActionSoundChoice());
+  const [soundClicks, setSoundClicks] = createSignal(isActionSoundKindEnabled("clicks"));
+  const [soundTyping, setSoundTyping] = createSignal(isActionSoundKindEnabled("typing"));
   const readSoundSettings = () => {
     setTaskSoundChoice(readTaskSound());
     setSoundChoice(readActionSoundChoice());
+    setSoundClicks(isActionSoundKindEnabled("clicks"));
+    setSoundTyping(isActionSoundKindEnabled("typing"));
   };
   window.addEventListener("storage", readSoundSettings);
   onCleanup(() => window.removeEventListener("storage", readSoundSettings));
@@ -368,6 +377,26 @@ export default function WebAccountSettings(props: WebAccountSettingsProps) {
                   />
                 </ItemActions>
               </Item>
+              <SwitchField
+                checked={soundClicks()}
+                disabled={soundChoice() === "off"}
+                onChange={(checked) => {
+                  setSoundClicks(checked);
+                  setActionSoundKindEnabled("clicks", checked);
+                }}
+                label={t("settings.soundClicks.title")}
+                description={t("settings.soundClicks.description")}
+              />
+              <SwitchField
+                checked={soundTyping()}
+                disabled={soundChoice() === "off"}
+                onChange={(checked) => {
+                  setSoundTyping(checked);
+                  setActionSoundKindEnabled("typing", checked);
+                }}
+                label={t("settings.soundTyping.title")}
+                description={t("settings.soundTyping.description")}
+              />
             </ItemGroup>
           </SettingsSection>
         </Tabs.Content>

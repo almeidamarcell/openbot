@@ -172,6 +172,22 @@ export function SettingsNotificationsTab(props: SettingsNotificationsTabProps) {
               />
             </ItemActions>
           </Item>
+          <SwitchField
+            data-settings-row="settings.soundClicks.title"
+            checked={props.value.soundClicks}
+            disabled={!props.value.soundFeedback}
+            onChange={(checked) => props.onUpdateSetting("soundClicks", checked)}
+            label={i18n.t("settings.soundClicks.title")}
+            description={i18n.t("settings.soundClicks.description")}
+          />
+          <SwitchField
+            data-settings-row="settings.soundTyping.title"
+            checked={props.value.soundTyping}
+            disabled={!props.value.soundFeedback}
+            onChange={(checked) => props.onUpdateSetting("soundTyping", checked)}
+            label={i18n.t("settings.soundTyping.title")}
+            description={i18n.t("settings.soundTyping.description")}
+          />
         </ItemGroup>
       </SettingsSection>
     </>

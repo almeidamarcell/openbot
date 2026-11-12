@@ -205,6 +205,10 @@ export const messages = {
   "settings.soundFeedback.title": "Aktionstöne",
   "settings.soundFeedback.description":
     "Kurze Töne zur Bestätigung von Aktionen wie dem Senden einer Nachricht verwenden.",
+  "settings.soundClicks.title": "Klicktöne",
+  "settings.soundClicks.description": "Einen Ton für Klicks auf Bedienelemente wie Schaltflächen und Menüs verwenden.",
+  "settings.soundTyping.title": "Tipptöne",
+  "settings.soundTyping.description": "Einen Ton für jede getippte Taste verwenden.",
   "settings.soundTheme.off": "Aus",
   "settings.soundTheme.classic": "Klassisch",
   "settings.soundTheme.warm": "Warm",

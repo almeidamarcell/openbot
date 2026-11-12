@@ -10,7 +10,13 @@ import type { MarketplaceListingLink } from "@openbot/contracts/marketplace-link
 import { DEFAULT_GENERAL_SETTINGS, type GeneralSettingsValue } from "@openbot/ui/features/settings/app-settings";
 import { currentText } from "@openbot/ui/text";
 import { createEffect, createSignal, flush, onSettled } from "solid-js";
-import { isActionSoundEnabled, readActionSoundTheme, setActionSoundChoice } from "../../action-sounds";
+import {
+  isActionSoundEnabled,
+  isActionSoundKindEnabled,
+  readActionSoundTheme,
+  setActionSoundChoice,
+  setActionSoundKindEnabled,
+} from "../../action-sounds";
 import { actionToast } from "../../action-toast";
 import { readShowAgentSteps, setShowAgentSteps, useShowAgentSteps } from "../../agent-steps-preference";
 import { desktopAnalytics } from "../../analytics";
@@ -159,6 +165,8 @@ const Settings = createSimpleContext({
         compactMessageActions: readCompactMessageActions(),
         soundFeedback: isActionSoundEnabled(),
         soundTheme: readActionSoundTheme(),
+        soundClicks: isActionSoundKindEnabled("clicks"),
+        soundTyping: isActionSoundKindEnabled("typing"),
       },
       { equals: samePlainValue },
     );
@@ -286,6 +294,8 @@ const Settings = createSimpleContext({
       if (previous.soundFeedback !== value.soundFeedback || previous.soundTheme !== value.soundTheme) {
         setActionSoundChoice(value.soundFeedback ? value.soundTheme : "off");
       }
+      if (previous.soundClicks !== value.soundClicks) setActionSoundKindEnabled("clicks", value.soundClicks);
+      if (previous.soundTyping !== value.soundTyping) setActionSoundKindEnabled("typing", value.soundTyping);
       // A choice equal to the shown default is still a choice, and the account gets it.
       if (previous.productAnalytics !== value.productAnalytics || options.analyticsChosen === true) {
         desktopAnalytics.setTrackingEnabled(value.productAnalytics, { recordOptOut: true });

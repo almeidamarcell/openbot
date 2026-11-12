@@ -23,6 +23,9 @@ export type SoundChoice = "off" | SoundTheme;
 export type TaskSoundChoice = "off" | "classic" | SoundTheme;
 export const TASK_SOUND_CHOICES = ["off", "classic", ...SOUND_THEMES] as const satisfies readonly TaskSoundChoice[];
 export const ACTION_SOUND_CHOICES = ["off", ...SOUND_THEMES] as const satisfies readonly SoundChoice[];
+/** The action sounds that have their own switch: clicks on controls, and typed keys. */
+export const ACTION_SOUND_KINDS = ["clicks", "typing"] as const;
+export type ActionSoundKind = (typeof ACTION_SOUND_KINDS)[number];
 
 export interface GeneralSettingsValue {
   /** Null hides the switch: a development run and a server cannot open at login. */
@@ -69,6 +72,10 @@ export interface GeneralSettingsValue {
   /** Short sounds that confirm the user's own actions, such as a click or a sent message. */
   soundFeedback: boolean;
   soundTheme: SoundTheme;
+  /** The action sounds include the clicks on controls. It has an effect only while `soundFeedback` is on. */
+  soundClicks: boolean;
+  /** The action sounds include the typed keys. It has an effect only while `soundFeedback` is on. */
+  soundTyping: boolean;
   autoDownloadUpdates: boolean;
   /** Owners and admins of a joined server can start an update of this computer. */
   allowRemoteUpdates: boolean;
@@ -105,6 +112,8 @@ export const DEFAULT_GENERAL_SETTINGS: GeneralSettingsValue = {
   keepRemoteSessions: true,
   soundFeedback: false,
   soundTheme: "default",
+  soundClicks: true,
+  soundTyping: true,
   autoDownloadUpdates: true,
   allowRemoteUpdates: true,
   autoInstallUpdates: false,

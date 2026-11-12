@@ -206,6 +206,10 @@ export const messages = {
   "settings.soundFeedback.title": "Dźwięki akcji",
   "settings.soundFeedback.description":
     "Krótkie dźwięki potwierdzają twoje działania, na przykład wysłanie wiadomości.",
+  "settings.soundClicks.title": "Dźwięki kliknięć",
+  "settings.soundClicks.description": "Dźwięk przy kliknięciu elementu, na przykład przycisku lub menu.",
+  "settings.soundTyping.title": "Dźwięki pisania",
+  "settings.soundTyping.description": "Dźwięk przy każdym naciśniętym klawiszu.",
   "settings.soundTheme.off": "Wyłączone",
   "settings.soundTheme.classic": "Klasyczny",
   "settings.soundTheme.warm": "Ciepły",

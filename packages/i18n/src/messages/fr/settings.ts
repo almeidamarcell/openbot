@@ -211,6 +211,11 @@ export const messages = {
   "settings.soundFeedback.title": "Sons des actions",
   "settings.soundFeedback.description":
     "Utiliser de courts sons pour confirmer vos actions, comme l’envoi d’un message.",
+  "settings.soundClicks.title": "Sons des clics",
+  "settings.soundClicks.description":
+    "Utiliser un son pour les clics sur les commandes, comme les boutons et les menus.",
+  "settings.soundTyping.title": "Sons de la saisie",
+  "settings.soundTyping.description": "Utiliser un son pour chaque touche que vous tapez.",
   "settings.soundTheme.off": "Désactivé",
   "settings.soundTheme.classic": "Classique",
   "settings.soundTheme.warm": "Chaleureux",
